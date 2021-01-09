@@ -51,6 +51,7 @@ public class Controller implements Initializable {
     private Stage stage;
     private Stage regStage;
     private RegController regController;
+    private String login;
 
     public void setAuthenticated(boolean authenticated) {
         this.authenticated = authenticated;
@@ -109,7 +110,11 @@ public class Controller implements Initializable {
 
                             if (str.startsWith("/authok ")) {
                                 nickname = str.split("\\s")[1];
+                                login = str.split("\\s")[2];
                                 setAuthenticated(true);
+
+                                textArea.appendText(History.getLastLinesOfHistory(login));
+                                History.start(login);
                                 break;
                             }
 
@@ -131,11 +136,16 @@ public class Controller implements Initializable {
                                     }
                                 });
                             }
+                            if (str.startsWith("/yournickis ")) {
+                                nickname = str.split("\\s")[1];
+                                setTitle(nickname);
+                            }
                             if (str.equals("/end")) {
                                 break;
                             }
                         } else {
                             textArea.appendText(str + "\n");
+                            History.writeLine(str, login);
                         }
                     }
                 } catch (IOException e) {
