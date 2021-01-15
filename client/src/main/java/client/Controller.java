@@ -63,6 +63,7 @@ public class Controller implements Initializable {
         clientList.setVisible(authenticated);
         if (!authenticated) {
             nickname = "";
+            History.stop();
         }
         setTitle(nickname);
         textArea.clear();
@@ -145,7 +146,7 @@ public class Controller implements Initializable {
                             }
                         } else {
                             textArea.appendText(str + "\n");
-                            History.writeLine(str, login);
+                            History.writeLine(str);
                         }
                     }
                 } catch (IOException e) {
