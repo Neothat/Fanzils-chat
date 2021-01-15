@@ -48,7 +48,7 @@ public class ClientHandler {
                                     login = token[1];
                                     if (!server.isloginAuthenticated(login)) {
                                         nickname = newNick;
-                                        out.writeUTF("/authok " + nickname);
+                                        out.writeUTF("/authok " + nickname + " " + login);
                                         server.subscribe(this);
                                         break;
                                     } else {
@@ -78,6 +78,24 @@ public class ClientHandler {
                                 out.writeUTF("/end");
                                 break;
                             }
+                            if (str.startsWith("/chnick ")){
+                                String[] token = str.split(" ", 2);
+                                if (token.length < 2){
+                                    continue;
+                                }
+                                if (token[1].contains(" ")){
+                                    sendMsg("Ник не может содержать пробелов");
+                                    continue;
+                                }
+                                if (server.getAuthService().changeNick(this.nickname, token[1])){
+                                    sendMsg("/yournickis " + token[1]);
+                                    sendMsg("Ваш ник изменен на " + token[1]);
+                                    this.nickname = token[1];
+                                    server.broadcastClientList();
+                                } else {
+                                    sendMsg("Не удалось сменить ник. Ник " + token[1] + " ужже существует");
+                                }
+                            }
                         } else {
                             server.broadcastMsg(this, str);
                         }
@@ -103,6 +121,7 @@ public class ClientHandler {
     public void sendMsg(String msg) {
         try {
             out.writeUTF(msg);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
