@@ -5,6 +5,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Server {
     private ServerSocket server;
@@ -13,8 +15,16 @@ public class Server {
     private List<ClientHandler> clients;
     private AuthService authService;
 
+    private static ExecutorService executorService;
+
+    public static ExecutorService getExecutorService(){
+        return executorService;
+    }
+
     public Server() {
         clients = new CopyOnWriteArrayList<>();
+
+        executorService = Executors.newCachedThreadPool();
 
         if (!SQLHandler.connect()) throw new RuntimeException("Не удалось подключиться к БД");
         authService = new DBAuthService();
