@@ -15,9 +15,9 @@ public class Server {
     private List<ClientHandler> clients;
     private AuthService authService;
 
-    private static ExecutorService executorService;
+    private ExecutorService executorService;
 
-    public static ExecutorService getExecutorService(){
+    public ExecutorService getExecutorService(){
         return executorService;
     }
 
