@@ -7,8 +7,11 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Logger;
 
 public class Server {
+    private static final Logger logger = Logger.getLogger(Server.class.getName());
+
     private ServerSocket server;
     private Socket socket;
     private final int PORT = 8189;
@@ -26,15 +29,18 @@ public class Server {
 
         executorService = Executors.newCachedThreadPool();
 
-        if (!SQLHandler.connect()) throw new RuntimeException("Не удалось подключиться к БД");
+        if (!SQLHandler.connect()) {
+            logger.severe("Не удалось подключиться к БД");
+            throw new RuntimeException("Не удалось подключиться к БД");
+        }
         authService = new DBAuthService();
         try {
             server = new ServerSocket(PORT);
-            System.out.println("server started!");
+            logger.info("server started!");
 
             while (true) {
                 socket = server.accept();
-                System.out.println("client connected " + socket.getRemoteSocketAddress());
+                logger.info("client connected " + socket.getRemoteSocketAddress());
                 new ClientHandler(this, socket);
             }
 
@@ -42,7 +48,7 @@ public class Server {
             e.printStackTrace();
         } finally {
             SQLHandler.disconnect();
-            System.out.println("server closed");
+            logger.info("server closed");
             try {
                 server.close();
             } catch (IOException e) {

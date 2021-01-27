@@ -5,8 +5,11 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
+import java.util.logging.Logger;
 
 public class ClientHandler {
+    private static final Logger logger = Logger.getLogger(ClientHandler.class.getName());
+
     private Server server;
     private Socket socket;
     private DataInputStream in;
@@ -55,9 +58,11 @@ public class ClientHandler {
                                             server.subscribe(ClientHandler.this);
                                             break;
                                         } else {
+                                            logger.fine("Учетная запись уже используется");
                                             out.writeUTF("Учетная запись уже используется");
                                         }
                                     } else {
+                                        logger.fine("Неверный логин / пароль");
                                         out.writeUTF("Неверный логин / пароль");
                                     }
                                 }
@@ -107,7 +112,7 @@ public class ClientHandler {
                     } catch (IOException e) {
                         e.printStackTrace();
                     } finally {
-                        System.out.println("Client disconnected!");
+                        logger.info("Client disconnected!");
                         server.unsubscribe(ClientHandler.this);
                         try {
                             socket.close();

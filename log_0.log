@@ -1,0 +1,10 @@
+янв 27, 2021 4:13:31 AM server.Server <init>
+INFO: server started!
+янв 27, 2021 4:14:07 AM server.Server <init>
+INFO: client connected /127.0.0.1:55597
+янв 27, 2021 4:15:41 AM server.Server <init>
+INFO: client connected /127.0.0.1:55633
+янв 27, 2021 4:15:43 AM server.ClientHandler$1 run
+INFO: Client disconnected!
+янв 27, 2021 4:15:44 AM server.ClientHandler$1 run
+INFO: Client disconnected!
